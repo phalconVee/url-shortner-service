@@ -6,7 +6,8 @@ import { ErrorMiddleware } from "./middleware/errorMiddleware";
 
 class App {
   public app: express.Application = express();
-  public mongoUrl: string = process.env.MONGO_URL;
+  public mongoUrl: string =
+    process.env.MONGO_URL || "mongodb://localhost/vidly";
   public routeEng: Routes = new Routes();
   public errorMiddleware: ErrorMiddleware = new ErrorMiddleware();
 
@@ -17,7 +18,6 @@ class App {
     this.errorHandler();
   }
 
-  // extend parser functions
   private config(): void {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: false }));
@@ -25,7 +25,11 @@ class App {
 
   private mongoSetup(): void {
     /** mongoose.Promise = global.Promise; */
-    mongoose.connect(this.mongoUrl, { useNewUrlParser: true });
+    mongoose.connect(this.mongoUrl, {
+      useUnifiedTopology: true,
+      useNewUrlParser: true,
+    });
+    console.log("Connected to MongoDB: " + this.mongoUrl);
   }
 
   private errorHandler() {

@@ -2,12 +2,11 @@
   "name": "shortlink",
   "version": "1.0.0",
   "description": "ShortLink - URL shortener tool",
-  "main": "./dist/server.ts",
+  "main": "./src/server.ts",
   "scripts": {
+    "db:up": "migrate-mongo up",
     "test": "jest --watchAll --colors",
-    "start": "nodemon --ignore './tests' ./src/server.ts",
-    "dev": "ts-node ./src/server.ts",
-    "prod": "npm run build && npm run start"
+    "start": "nodemon --ignore './tests' ./src/server.ts"
   },
   "keywords": [
     "Ugochukwu"
