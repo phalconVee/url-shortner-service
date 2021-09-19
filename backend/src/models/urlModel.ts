@@ -1,7 +1,7 @@
 import * as mongoose from "mongoose";
 
 export const urlSchema = new mongoose.Schema({
-  originalUrl: {
+  longUrl: {
     type: String,
   },
   urlCode: {

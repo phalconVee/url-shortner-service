@@ -17,7 +17,7 @@ export class URLController {
   async shortenURL(req: Request, res: Response, next: NextFunction) {
     /** Validate url */
     const { longUrl } = req.body;
-    if (validUrl.isUri(longUrl))
+    if (!validUrl.isUri(longUrl))
       return res.status(400).json({
         data: ["Invalid URL. Please enter a valid url."],
       });
@@ -62,14 +62,14 @@ export class URLController {
    */
   async decodeURL(req: Request, res: Response, next: NextFunction) {
     const shortUrlCode = req.params.hash;
-    const allowedCicks = process.env.ALLOWED_CLICK;
+    const allowedClicks = process.env.ALLOWED_CLICK;
 
     try {
       const url = await URL.findOne({ urlCode: shortUrlCode });
 
       if (url) {
         let clickCount = url.clickCount;
-        if (clickCount >= allowedCicks) {
+        if (clickCount >= allowedClicks) {
           return res.status(400).json({
             data: [`The click count for ${shortUrlCode} is exceeded`],
           });
@@ -95,7 +95,9 @@ export class URLController {
    * @param next
    */
   async generateBasicStat(req: Request, res: Response, next: NextFunction) {
-    const shortUrlCode = req.params.hash;
+    const shortUrlCode = req.params.url_path;
+    console.log(`shey na im: ${shortUrlCode}`);
+
     try {
       const url = await URL.findOne({ urlCode: shortUrlCode });
 

@@ -13,7 +13,11 @@ export class Routes {
 
     app.route("/encode").post(this.urlController.shortenURL);
 
-    app.route("/decode/:hash").post(this.urlController.decodeURL);
+    app.route("/decode/:hash").get(this.urlController.decodeURL);
+
+    app.route("/:hash").get(this.urlController.decodeURL);
+
+    app.route("/statistic/:url_path").get(this.urlController.generateBasicStat);
 
     /** Invalid Routes */
     app.route("*").get((req: Request, res: Response) => {
