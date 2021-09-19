@@ -1,0 +1,23 @@
+version: "3.8"
+
+services:
+  api:
+    build: ./backend
+    ports:
+      - 3001:3001
+    environment:
+      DB_URL: mongodb://db/indicina
+      BASE_URL: http://localhost:3001/
+      ALLOWED_CLICK: 10
+    volumes:
+      - ./backend:/app
+    command: ./docker-entrypoint.sh
+  db:
+    image: mongo:4.0-xenial
+    ports:
+      - 27017:27017
+    volumes:
+      - indicina:/data/db
+
+volumes:
+  indicina:
