@@ -7,7 +7,7 @@ import { ErrorMiddleware } from "./middleware/errorMiddleware";
 class App {
   public app: express.Application = express();
   public mongoUrl: string =
-    process.env.MONGO_URL || "mongodb://localhost/vidly";
+    process.env.DB_URL || "mongodb://localhost/indicina";
   public routeEng: Routes = new Routes();
   public errorMiddleware: ErrorMiddleware = new ErrorMiddleware();
 
