@@ -1,21 +1,12 @@
-const Joi = require("joi");
-const btoa = require("btoa");
-const atob = require("atob");
+const validUrl = require("valid-url");
 import * as mongoose from "mongoose";
 import { Request, Response, NextFunction } from "express";
 import { urlSchema } from "../models/urlModel";
-import { UtilHelper } from "../helpers/utilHelper";
-
-/** Schema validation */
-const urlRule = Joi.object({
-  url: Joi.string().required(),
-});
+import { generate } from "../utils/hashUtils";
 
 const URL = mongoose.model("URL", urlSchema);
 
 export class URLController {
-  public utils: UtilHelper = new UtilHelper();
-
   /**
    * Encode URL to a shortened URL.
    *
@@ -24,39 +15,38 @@ export class URLController {
    * @param next
    */
   async shortenURL(req: Request, res: Response, next: NextFunction) {
-    /** Validate request */
-    const { error } = urlRule.validate(req.body);
-    if (error)
-      return res
-        .status(422)
-        .json({ status: false, data: [error.details[0].message] });
+    /** Validate url */
+    const { longUrl } = req.body;
+    if (validUrl.isUri(longUrl))
+      return res.status(400).json({
+        data: ["Invalid URL. Please enter a valid url."],
+      });
 
     /** Check if url exists */
-    const urlExists = await URL.findOne({ url: req.body.url });
-    if (!urlExists) {
-      res.status(200).json({
-        status: true,
-        data: {
-          url: req.body.url,
-          hash: this.utils.encode(urlExists._id), // turn binary data to base64-encoded ascii.
-          status: 200,
-        },
+    let urlExists = await URL.findOne({ longUrl: longUrl });
+    if (urlExists) {
+      return res.status(200).json({
+        data: urlExists,
       });
     }
 
+    const urlCode = generate();
+
     try {
-      let urlData = new URL({
-        url: req.body.url,
+      const baseURL = process.env.BASE_URL;
+      const shortUrl = baseURL + "/" + urlCode;
+
+      let newURL = new URL({
+        longUrl,
+        shortUrl,
+        urlCode,
+        clickCount: 0,
       });
 
-      urlData = await urlData.save();
+      newURL = await newURL.save();
 
       return res.status(200).json({
-        status: true,
-        data: {
-          url: req.body.url,
-          hash: this.utils.encode(urlData._id),
-        },
+        data: newURL,
       });
     } catch (ex) {
       next(ex);
@@ -71,21 +61,29 @@ export class URLController {
    * @param next
    */
   async decodeURL(req: Request, res: Response, next: NextFunction) {
-    /** Validate request */
-    const { error } = urlRule.validate(req.body);
-    if (error)
-      return res
-        .status(422)
-        .json({ status: false, data: [error.details[0].message] });
+    const shortUrlCode = req.params.hash;
+    const allowedCicks = process.env.ALLOWED_CLICK;
 
     try {
-      const shortenedLink = req.params.link;
-      var converted = this.utils.decode(shortenedLink);
+      const url = await URL.findOne({ urlCode: shortUrlCode });
 
-      const ticket = await URL.findOne({ _id: converted });
-      res.redirect(ticket.url);
+      if (url) {
+        let clickCount = url.clickCount;
+        if (clickCount >= allowedCicks) {
+          return res.status(400).json({
+            data: [`The click count for ${shortUrlCode} is exceeded`],
+          });
+        }
+        clickCount++;
+        await url.update({ clickCount });
+        return res.redirect(url.longUrl);
+      } else {
+        return res.status(400).json({
+          data: ["The short url provided doesn't exist"],
+        });
+      }
     } catch (ex) {
-      res.redirect("/");
+      next(ex);
     }
   }
 
@@ -96,5 +94,22 @@ export class URLController {
    * @param res
    * @param next
    */
-  async generateBasicStat(req: Request, res: Response, next: NextFunction) {}
+  async generateBasicStat(req: Request, res: Response, next: NextFunction) {
+    const shortUrlCode = req.params.hash;
+    try {
+      const url = await URL.findOne({ urlCode: shortUrlCode });
+
+      if (url) {
+        return res.status(200).json({
+          data: url,
+        });
+      } else {
+        return res.status(400).json({
+          data: ["The short url provided doesn't exist"],
+        });
+      }
+    } catch (ex) {
+      next(ex);
+    }
+  }
 }

@@ -11,7 +11,9 @@ export class Routes {
       });
     });
 
-    app.route("/api/encode").post(this.urlController.shortenURL);
+    app.route("/encode").post(this.urlController.shortenURL);
+
+    app.route("/decode/:hash").post(this.urlController.decodeURL);
 
     /** Invalid Routes */
     app.route("*").get((req: Request, res: Response) => {

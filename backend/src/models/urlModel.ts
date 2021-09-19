@@ -1,16 +1,23 @@
 import * as mongoose from "mongoose";
 
 export const urlSchema = new mongoose.Schema({
-  _id: {
+  originalUrl: {
+    type: String,
+  },
+  urlCode: {
+    type: String,
+  },
+  shortUrl: {
+    type: String,
+  },
+  clickCount: {
     type: Number,
   },
-  url: {
-    type: String,
-    required: true,
-    minlength: 5,
-    maxlength: 255,
-  },
   created_at: {
+    type: Date,
+    default: Date.now,
+  },
+  updated_at: {
     type: Date,
     default: Date.now,
   },
