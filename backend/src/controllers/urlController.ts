@@ -45,7 +45,7 @@ export class URLController {
 
       newURL = await newURL.save();
 
-      return res.status(200).json({
+      return res.status(201).json({
         data: newURL,
       });
     } catch (ex) {
