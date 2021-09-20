@@ -1,11 +1,9 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
 import ShortnerForm from "./ShortnerForm";
 import api from "../services/api";
 import "./App.css";
 
 function App() {
-  const history = useHistory();
   const [stats, setURLStat] = useState({});
   const [error, setError] = useState();
 
@@ -23,10 +21,6 @@ function App() {
         setError("Could not shorten the URL!");
         setURLStat(stats);
       });
-  };
-
-  const redirectURL = (url) => {
-    history.push(url);
   };
 
   return (
@@ -62,16 +56,6 @@ function App() {
           <strong>URL Code:</strong> {stats?.urlCode || ""}
         </div>
       </div>
-
-      {/* {Object.keys(stats).length > 0 && (
-        <div className="URLItem">
-          <div className="text" data-testid="longURL">
-            Long URL: {stats.longUrl}
-          </div>
-          <div className="text">Indicina Short URL: {stats.shortUrl}</div>
-          <div className="text">URL Code: {stats.urlCode}</div>
-        </div>
-      )} */}
     </div>
   );
 }
