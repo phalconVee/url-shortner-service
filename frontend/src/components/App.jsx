@@ -25,6 +25,10 @@ function App() {
       });
   };
 
+  const redirectURL = (url) => {
+    history.push(url);
+  };
+
   return (
     <div className="App">
       <h1 data-testid="title">Indicina URL Shortener</h1>
@@ -42,12 +46,14 @@ function App() {
           <strong>Long URL:</strong> {stats?.longUrl || ""}
         </div>
         <div className="text">
-          <strong>Indicina Short URL:</strong>{" "}
+          <strong>Indicina Short URL:</strong> {""}
           {Object.keys(stats).length > 0 ? (
             <span
-              style={{ color: "#df3836", textDecoration: "underline" }}
-              onClick={() => history.push(stats.shortUrl)}
-            ></span>
+              className="linked"
+              onClick={() => (window.location.href = stats.shortUrl)}
+            >
+              {stats.shortUrl}
+            </span>
           ) : (
             ""
           )}
