@@ -7,21 +7,12 @@ function App() {
   const [stats, setURLStat] = useState({});
   const [error, setError] = useState();
 
-  //   const fetchURLStat = async (hash) => {
-  //     try {
-  //       const { data } = await api.get("/statistic/" + hash);
-  //       setURLStat(data);
-  //     } catch (error) {
-  //       setError("Could not fetch the URL stat!");
-  //     }
-  //   };
-
   const handleShortenURL = async (longUrl) => {
     try {
       const newURL = { longUrl };
       setURLStat([...stats, newURL]);
 
-      const { data } = await api.create("/shorten", newURL);
+      const { data } = await api.shorten("/encode", newURL);
 
       setURLStat([...stats, data]);
     } catch (error) {
@@ -43,13 +34,23 @@ function App() {
       )}
 
       <br />
-      {Object.keys(stats).length > 0 && (
+      <div className="URLItem">
+        <div className="text" data-testid="longURL">
+          Long URL: {stats?.longUrl || ""}
+        </div>
+        <div className="text">Indicina Short URL: {stats?.shortUrl || ""}</div>
+        <div className="text">URL Code: {stats?.urlCode || ""}</div>
+      </div>
+
+      {/* {Object.keys(stats).length > 0 && (
         <div className="URLItem">
-          <div className="text">Long URL: {stats.longUrl}</div>
+          <div className="text" data-testid="longURL">
+            Long URL: {stats.longUrl}
+          </div>
           <div className="text">Indicina Short URL: {stats.shortUrl}</div>
           <div className="text">URL Code: {stats.urlCode}</div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

@@ -1,9 +1,5 @@
-import {
-  fireEvent,
-  render,
-  screen,
-  waitForElementToBeRemoved,
-} from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
+import { act } from "react-dom/test-utils";
 import "@testing-library/jest-dom/extend-expect";
 import { rest } from "msw";
 import { setupServer } from "msw/node";
@@ -44,7 +40,7 @@ describe("App component", () => {
 
     const title = await screen.findByTestId("title");
 
-    expect(title).toEqual("Indicina URL Shortener");
+    expect(title).toBeInTheDocument();
   });
 
   describe("When a URL is shortened", () => {
@@ -52,24 +48,18 @@ describe("App component", () => {
       await renderApp();
 
       shortenURL();
-      await screen.findByText(newURL.title);
+      await screen.findByTestId("longURL");
 
       const inputField = screen.getByLabelText("Shorten URL");
       expect(inputField).toHaveValue("");
     });
 
-    test("it is removed from the list if the call to the server fails", async () => {
-      server.use(
-        rest.post(apiEndpoint + "/encode", (req, res, ctx) =>
-          res(ctx.status(500))
-        )
-      );
-
+    test("it is added to the dom", async () => {
       await renderApp();
 
       shortenURL();
 
-      await waitForElementToBeRemoved(() => screen.queryByText(newURL.longUrl));
+      await screen.findByTestId("longURL");
     });
 
     test("An error is displayed if the call to the server fails", async () => {
@@ -84,7 +74,7 @@ describe("App component", () => {
       shortenURL();
 
       const error = await screen.findByRole("alert");
-      expect(error).toHaveTextContent(/save/i);
+      expect(error).toHaveTextContent(/could not shorten the URL!/i);
     });
   });
 });
@@ -102,5 +92,7 @@ const shortenURL = () => {
     target: { value: newURL.longUrl },
   });
 
-  fireEvent.submit(inputField);
+  act(() => {
+    fireEvent.submit(inputField);
+  });
 };
