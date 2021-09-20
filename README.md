@@ -2,6 +2,13 @@
 
 A URL Shortener service based on Node.js, Express, MongoDB/Mongoose and Typescript.
 
+Endpoints exposed include:
+
+- Encode URL (_/encode_) : Encodes a URL to a shortened URL
+- Decode URL (_/decode/:hash_) : Decodes a shortened URL to it's original URL
+- Decode URL (_/:hash_) : Decoding a shortened URL and redirect to original URL
+- Statistic (_/deocde_) : Retrun basic stat of a short URL path
+
 ## Requirements
 
 [NodeJS](https://nodejs.org/en/)
@@ -12,9 +19,13 @@ Install global TypeScript and TypeScript Node (incase you don't have it installe
 npm install -g typescript ts-node
 ```
 
-The project has also been setup and configured to be run on any machine via docker.
+[Docker](https://docs.docker.com/get-docker/)
 
-Install [Docker](https://docs.docker.com/get-docker/) on your local machine.
+The project has also been setup and configured to be run on any machine via docker. Install [Docker](https://docs.docker.com/get-docker/) on your local machine.
+
+[MongoDB](https://docs.mongodb.com/manual/administration/install-community/)
+
+Install Mongo DB Community Edition on your local machine, and manage collections via MongoDB Compass GUI [MongoDB Compass](https://www.mongodb.com/try/download/compass)
 
 ## Clone this repository
 
