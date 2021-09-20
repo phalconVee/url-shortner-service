@@ -36,7 +36,7 @@ The default URL for backend service: _http://localhost:3001_
 The default URL for frontend app: _http://localhost:3000_
 
 API documentation is available on [POSTMAN](https://documenter.getpostman.com/view/3832128/UUxtGWgb).
-You can aloso find the postman collection in the root folder.
+You can as well find the exported postman collection in the root folder.
 
 The project has been setup to use Jest for unit testing and supertest for integration testing and MongoDB-memory-server that allows us to start a mongod process that stores data in memory.
 
