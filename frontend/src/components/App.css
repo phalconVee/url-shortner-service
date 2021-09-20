@@ -1,5 +1,5 @@
 .App {
-  width: 30%;
+  margin: 0 auto;
 }
 
 .Error {
@@ -9,12 +9,11 @@
 .URLItem {
   display: flex;
   flex-direction: column;
-  gap: em;
+  gap: 1em;
   list-style: none;
   padding-left: 0;
 }
 
 .text {
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 16px;
 }

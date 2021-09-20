@@ -1,25 +1,28 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import ShortnerForm from "./ShortnerForm";
 import api from "../services/api";
 import "./App.css";
 
 function App() {
+  const history = useHistory();
   const [stats, setURLStat] = useState({});
   const [error, setError] = useState();
 
   const handleShortenURL = (longUrl) => {
-    try {
-      const newURL = { longUrl };
-      setURLStat({ ...stats, newURL });
+    const newURL = { longUrl };
+    setURLStat({ ...stats, newURL });
 
-      const { data } = api.shorten("/encode", newURL);
-
-      setURLStat(data);
-    } catch (error) {
-      console.log(JSON.stringify(error));
-      setError("Could not shorten the URL!");
-      setURLStat(stats);
-    }
+    api
+      .shorten("/encode", newURL)
+      .then((res) => {
+        setURLStat(res.data.data);
+      })
+      .catch((err) => {
+        console.lerror(err);
+        setError("Could not shorten the URL!");
+        setURLStat(stats);
+      });
   };
 
   return (
@@ -36,10 +39,22 @@ function App() {
       <br />
       <div className="URLItem">
         <div className="text" data-testid="longURL">
-          Long URL: {stats?.longUrl || ""}
+          <strong>Long URL:</strong> {stats?.longUrl || ""}
         </div>
-        <div className="text">Indicina Short URL: {stats?.shortUrl || ""}</div>
-        <div className="text">URL Code: {stats?.urlCode || ""}</div>
+        <div className="text">
+          <strong>Indicina Short URL:</strong>{" "}
+          {Object.keys(stats).length > 0 ? (
+            <span
+              style={{ color: "#df3836", textDecoration: "underline" }}
+              onClick={() => history.push(stats.shortUrl)}
+            ></span>
+          ) : (
+            ""
+          )}
+        </div>
+        <div className="text">
+          <strong>URL Code:</strong> {stats?.urlCode || ""}
+        </div>
       </div>
 
       {/* {Object.keys(stats).length > 0 && (
