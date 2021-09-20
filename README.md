@@ -19,7 +19,7 @@ Install [Docker](https://docs.docker.com/get-docker/) on your local machine.
 ## Clone this repository
 
 ```
-git clone git@github.com:phalconVee/fliqpay.git .
+git clone git@github.com:phalconVee/url-shortner-service.git
 ```
 
 Navigate to the folder where you will notice, the project is divided into backend and frontend. Most of the work is on the backend, the frontend is just to provide a user interface around consuming the service.
