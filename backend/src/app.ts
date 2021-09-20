@@ -1,6 +1,7 @@
 require("dotenv").config();
 import * as express from "express";
 import * as mongoose from "mongoose";
+import * as cors from "cors";
 import { Routes } from "./routes/apiRoutes";
 import { ErrorMiddleware } from "./middleware/errorMiddleware";
 
@@ -19,6 +20,11 @@ class App {
   }
 
   private config(): void {
+    const allowedOrigins = ["http://localhost:3000"];
+    const options: cors.CorsOptions = {
+      origin: allowedOrigins,
+    };
+    this.app.use(cors(options));
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: false }));
   }
