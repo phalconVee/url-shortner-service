@@ -7,14 +7,14 @@ function App() {
   const [stats, setURLStat] = useState({});
   const [error, setError] = useState();
 
-  const handleShortenURL = async (longUrl) => {
+  const handleShortenURL = (longUrl) => {
     try {
       const newURL = { longUrl };
-      setURLStat([...stats, newURL]);
+      setURLStat({ ...stats, newURL });
 
-      const { data } = await api.shorten("/encode", newURL);
+      const { data } = api.shorten("/encode", newURL);
 
-      setURLStat([...stats, data]);
+      setURLStat(data);
     } catch (error) {
       console.log(JSON.stringify(error));
       setError("Could not shorten the URL!");

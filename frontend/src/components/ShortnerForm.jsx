@@ -24,6 +24,8 @@ function ShortnerForm({ onShortenURL }) {
         type="text"
         value={longUrl}
       />
+
+      {/* <button type="submit" onClick={handleSubmit}>Shorten</button> */}
     </form>
   );
 }

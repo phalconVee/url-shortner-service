@@ -9,11 +9,7 @@ services:
       REACT_APP_API_URL: http://localhost:3001
     volumes:
       - ./frontend:/app
-  web-tests:
-    image: indicina_web
-    volumes:
-      - ./frontend:/app
-    command: npm test
+
   api:
     build: ./backend
     ports:
@@ -25,11 +21,7 @@ services:
     volumes:
       - ./backend:/app
     command: ./docker-entrypoint.sh
-  api-tests:
-    image: indicina_api
-    volumes:
-      - ./backend:/app
-    command: npm test
+
   db:
     image: mongo:4.0-xenial
     ports:
