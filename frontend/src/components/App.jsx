@@ -4,7 +4,7 @@ import api from "../services/api";
 import "./App.css";
 
 function App() {
-  const [stats, setURLStat] = useState([]);
+  const [stats, setURLStat] = useState({});
   const [error, setError] = useState();
 
   //   const fetchURLStat = async (hash) => {
@@ -21,10 +21,11 @@ function App() {
       const newURL = { longUrl };
       setURLStat([...stats, newURL]);
 
-      const { data } = await api.create("/encode", newURL);
+      const { data } = await api.create("/shorten", newURL);
 
       setURLStat([...stats, data]);
     } catch (error) {
+      console.log(JSON.stringify(error));
       setError("Could not shorten the URL!");
       setURLStat(stats);
     }
@@ -39,6 +40,15 @@ function App() {
         <p role="alert" className="Error">
           {error}
         </p>
+      )}
+
+      <br />
+      {Object.keys(stats).length > 0 && (
+        <div className="URLItem">
+          <div className="text">Long URL: {stats.longUrl}</div>
+          <div className="text">Indicina Short URL: {stats.shortUrl}</div>
+          <div className="text">URL Code: {stats.urlCode}</div>
+        </div>
       )}
     </div>
   );
