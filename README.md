@@ -7,7 +7,7 @@ Endpoints exposed include:
 - Encode URL (_/encode_) : Encodes a URL to a shortened URL
 - Decode URL (_/decode/:hash_) : Decodes a shortened URL to it's original URL
 - Decode URL (_/:hash_) : Decoding a shortened URL and redirect to original URL
-- Statistic (_/deocde_) : Retrun basic stat of a short URL path
+- Statistic (_/statistic/:urlpath_) : Return basic stat of a short URL path
 
 ## Requirements
 
